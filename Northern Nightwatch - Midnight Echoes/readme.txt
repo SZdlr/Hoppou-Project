@@ -41,4 +41,4 @@ Bloom Effects Library: http://www.bulletforge.org/u/darkwalker247/p/bloom-effect
 
 Lapfox Trax: http://lapfoxtrax.com/ [Creative Commons Attribution 4.0 International]
 
-Subtle Patterns: http://subtlepatterns.com (seems to be down, use Wayback Machine to view)
+Subtle Patterns: http://subtlepatterns.com
