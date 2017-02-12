@@ -1,0 +1,140 @@
+let finished = false; //is the dialog finished 
+
+//objects to render
+let objText;
+let objBox;
+//character images (left to right)
+let objChar1;
+let objChar2;
+let objChar3;
+let objChar4;
+
+
+/* set up image and text objects */
+function startDialog{
+	finished = false;
+	SetForbidPlayerShot(true);
+	SetForbidPlayerSpell(true);
+	
+	//dialog box
+	let boxBg = GetCurrentScriptDirectory ~ "img/dialog.png";
+	
+	objBox = ObjPrim_Create(OBJ_SPRITE_2D); //create 2D object
+	ObjPrim_SetTexture(objBox, boxBg); //set texture
+	ObjSprite2D_SetSourceRect(objBox, 0, 0, GetTextureWidth(boxBg), GetTextureHeight(boxBg)); //set size
+	Obj_SetRenderPriorityI(objBox, 59); //render below text, above characters
+	ObjSprite2D_SetDestCenter(objBox); //set position anchor to center
+	ObjRender_SetPosition(objBox, 195, 415, 0); //set position
+	
+	//text
+	objText = ObjText_Create(); //create text object
+	ObjText_SetText(objText, ""); //set surrogate text
+	ObjText_SetMaxWidth(objText,320);
+	ObjText_SetFontSize(objText, 12); //size 12
+	ObjText_SetFontBold(objText, true); //bold
+	ObjText_SetFontColorTop(objText, 0, 0, 0); //black
+	ObjText_SetFontColorBottom(objText, 0, 0, 0); //color
+	ObjText_SetFontBorderType(objText, BORDER_NONE); //no border
+	Obj_SetRenderPriorityI(objText, 60); //render on top of everything else
+	ObjRender_SetPosition(objText, 35, 400, 0); //in box
+	
+	//character images
+	objChar1 = ObjPrim_Create(OBJ_SPRITE_2D); //create 2D object
+	ObjPrim_SetTexture(objChar1, GetCurrentScriptDirectory ~ "img/cutin/yukiaCutin.png"); //set surrogate texture
+	ObjSprite2D_SetSourceRect(objChar1, 0, 0, 256, 256); //set size
+	Obj_SetRenderPriorityI(objChar1, 58); //render below of everything else
+	ObjSprite2D_SetDestCenter(objChar1); //set position anchor to center
+	ObjRender_SetPosition(objChar1, -256, -256, 0); //set position out of screen
+	
+	objChar2 = ObjPrim_Create(OBJ_SPRITE_2D); //create 2D object
+	ObjPrim_SetTexture(objChar2, GetCurrentScriptDirectory ~ "img/cutin/yukiaCutin.png"); //set surrogate texture
+	ObjSprite2D_SetSourceRect(objChar2, 0, 0, 256, 256); //set size
+	Obj_SetRenderPriorityI(objChar2, 58); //render below of everything else
+	ObjSprite2D_SetDestCenter(objChar2); //set position anchor to center
+	ObjRender_SetPosition(objChar2, -256, -256, 0); //set position out of screen
+	
+	objChar3 = ObjPrim_Create(OBJ_SPRITE_2D); //create 2D object
+	ObjPrim_SetTexture(objChar3, GetCurrentScriptDirectory ~ "img/cutin/yukiaCutin.png"); //set surrogate texture
+	ObjSprite2D_SetSourceRect(objChar3, 0, 0, 256, 256); //set size
+	Obj_SetRenderPriorityI(objChar3, 58); //render below of everything else
+	ObjSprite2D_SetDestCenter(objChar3); //set position anchor to center
+	ObjRender_SetPosition(objChar3, -256, -256, 0); //set position out of screen
+	
+	objChar4 = ObjPrim_Create(OBJ_SPRITE_2D); //create 2D object
+	ObjPrim_SetTexture(objChar4, GetCurrentScriptDirectory ~ "img/cutin/yukiaCutin.png"); //set surrogate texture
+	ObjSprite2D_SetSourceRect(objChar4, 0, 0, 256, 256); //set size
+	Obj_SetRenderPriorityI(objChar4, 58); //render below of everything else
+	ObjSprite2D_SetDestCenter(objChar4); //set position anchor to center
+	ObjRender_SetPosition(objChar4, -256, -256, 0); //set position out of screen
+}
+
+/* delete all objects */
+function finishDialog{
+	Obj_Delete(objText);
+	Obj_Delete(objBox);
+	Obj_Delete(objChar1);
+	Obj_Delete(objChar2);
+	Obj_Delete(objChar3);
+	Obj_Delete(objChar4);
+	
+	SetForbidPlayerShot(false);
+	SetForbidPlayerSpell(false);
+	finished = true;
+}
+
+/* set text */
+function say(text, img, pos){
+	//wait half a second
+	loop(30){yield;}
+	
+	//change images and text
+	displayCharacter(img,pos);
+	ObjText_SetText(objText, text);
+	
+	//pause script until OK or SHOOT is pressed
+	while(GetVirtualKeyState(VK_OK) == KEY_FREE && GetVirtualKeyState(VK_SHOT) == KEY_FREE){
+		yield;
+	}
+}
+
+/* display character image at position */
+function displayCharacter(img, pos){
+	//render all images with lower transparency and behind current one
+	ObjRender_SetAlpha(objChar1,99);
+	Obj_SetRenderPriorityI(objChar1, 57);
+	ObjRender_SetAlpha(objChar2,99);
+	Obj_SetRenderPriorityI(objChar2, 57);
+	ObjRender_SetAlpha(objChar3,99);
+	Obj_SetRenderPriorityI(objChar3, 57);
+	ObjRender_SetAlpha(objChar4,99);
+	Obj_SetRenderPriorityI(objChar4, 57);
+	
+	//render current image at pos
+	alternative(pos)
+	case (1){
+		ObjRender_SetPosition(objChar1, 70, 330, 0); //left
+		ObjPrim_SetTexture(objChar1, img); //change texture
+		ObjSprite2D_SetSourceRect(objChar1, 0, 0, -256, 256); //mirror to look to the right
+		Obj_SetRenderPriorityI(objChar1, 58); //to the front
+		ObjRender_SetAlpha(objChar1,255); //0% transparency
+	}
+	case (2){
+		ObjRender_SetPosition(objChar2, 120, 330, 0); //half left
+		ObjPrim_SetTexture(objChar2, img); //change texture
+		ObjSprite2D_SetSourceRect(objChar2, 0, 0, -256, 256); //mirror to look to the right
+		Obj_SetRenderPriorityI(objChar2, 58); //to the front
+		ObjRender_SetAlpha(objChar2,255); //0% transparency
+	}
+	case (3){
+		ObjRender_SetPosition(objChar3, 270, 330, 0); //half right
+		ObjPrim_SetTexture(objChar3, img); //change texture
+		Obj_SetRenderPriorityI(objChar3, 58); //to the front
+		ObjRender_SetAlpha(objChar3,255); //0% transparency
+	}
+	case (4){
+		ObjRender_SetPosition(objChar4, 320, 330, 0); //right
+		ObjPrim_SetTexture(objChar4, img); //change texture
+		Obj_SetRenderPriorityI(objChar4, 58); //to the front
+		ObjRender_SetAlpha(objChar4,255); //0% transparency
+	}
+} 	

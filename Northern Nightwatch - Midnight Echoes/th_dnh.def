@@ -1,0 +1,12 @@
+//package script path
+package.script.main = script/Hoppou/0Hoppou_Package_Main.txt
+
+//window title
+window.title = Northern Nightwatch ~ Midnight Echoes
+
+//screen resolution
+//default: 640 * 480
+//screen.width=864
+//screen.height=486
+screen.width=640
+screen.height=480

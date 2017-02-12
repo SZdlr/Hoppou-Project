@@ -1,0 +1,42 @@
+shot_image  = "./img_Effect.png"
+
+ShotData{
+	id = 0 //Dummy Shot
+	rect = (0,0,0,0)
+	render = ALPHA //ADD = glowing bullets
+	alpha=0 //255 = solid
+	collision = 12
+}
+
+ShotData{
+	id = 1 //Medicine's Shot
+	rect = (48,32,64,53)
+	render = ALPHA
+	alpha=160
+	collision = 8
+}
+
+ShotData{
+	id = 2 //Medicine's Shot
+	rect = (64,32,80,53)
+	render = ALPHA
+	alpha=160
+	collision = 8
+}
+
+
+ShotData{
+	id = 3 //Yukia's Option's Shot
+	rect = (136,30,143,46)
+	render = ALPHA
+	alpha=160
+	collision = 8
+}
+
+ShotData{
+	id = 4 //Yukia's Shot
+	rect = (136,0,143,30)
+	render = ALPHA
+	alpha=160
+	collision = 8
+}

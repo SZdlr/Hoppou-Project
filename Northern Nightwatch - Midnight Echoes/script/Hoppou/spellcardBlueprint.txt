@@ -1,0 +1,177 @@
+//import libraries
+#include "script/default_system/Default_ShotConst.txt" //shot sprites
+#include "script/default_system/Default_Effect.txt" //explosion effect
+#include "script/Hoppou/BloomFX.txt" //charge effects
+#include "script/Hoppou/SFX.txt" //sound
+
+//load sound
+LoadSound(bossdeathSFX);
+LoadSound(spellcardSFX);
+LoadSound(cardgetSFX);
+
+//load charge image
+let beams = GetCurrentScriptDirectory ~ "img/charge/Beams.png";
+
+let bossObj; //boss object
+//boss position
+let bossX = 0;
+let bossY = 0;
+let bossInd; //indicator object
+//counting frames for animation
+let animFrame = 0;
+let animFrame2 = 0;
+
+
+/* render boss sprite */
+task TRenderBoss {
+	let dir; //moving direction
+	let speed; //moving speed
+	let offset; //texture offset
+	
+	//texture boss
+	ObjPrim_SetTexture(bossObj,imgBoss); //set texture
+	ObjSprite2D_SetSourceRect(bossObj, 0, 0, 32, 32); //set texture size
+	ObjSprite2D_SetDestCenter(bossObj); //set position anchor to center
+	ObjRender_SetScaleXYZ(bossObj, 1.0, 1.0, 0); //set scale
+	
+	//set up boss indicator
+	bossIndicator;
+	
+	//until boss is dead
+	while (!Obj_IsDeleted(bossObj)){
+		//update boss speed and direction
+		dir = ObjMove_GetAngle(bossObj);
+		speed = ObjMove_GetSpeed(bossObj);
+		offset = 32;
+		
+		//animation handling
+		if(speed == 0){ //not moving
+			if(animFrame < 7) { ObjSprite2D_SetSourceRect(bossObj,0,0,offset,offset); }
+			if(animFrame >= 7 && animFrame < 15) { ObjSprite2D_SetSourceRect(bossObj,offset,0,offset*2,offset); }
+			if(animFrame >= 15 && animFrame < 22) { ObjSprite2D_SetSourceRect(bossObj,offset*2,0,offset*3,offset); }
+			if(animFrame >= 22 && animFrame < 30) { ObjSprite2D_SetSourceRect(bossObj,offset*3,0,offset*4,offset); }
+			if(animFrame >= 30 && animFrame < 37) { ObjSprite2D_SetSourceRect(bossObj,offset*4,0,offset*5,offset); }
+			if(animFrame >= 37 && animFrame < 45) { ObjSprite2D_SetSourceRect(bossObj,offset*5,0,offset*6,offset); }
+			if(animFrame >= 45 && animFrame < 52) { ObjSprite2D_SetSourceRect(bossObj,offset*6,0,offset*7,offset); }
+			if(animFrame >= 52) { ObjSprite2D_SetSourceRect(bossObj,offset*7,0,offset*8,offset); }
+			animFrame2 = 0;
+		}
+		else if(cos(dir) < 0){ //moving left
+			if(animFrame < 7) { ObjSprite2D_SetSourceRect(bossObj,0,offset,offset,offset*2); }
+			if(animFrame >= 7 && animFrame < 15) { ObjSprite2D_SetSourceRect(bossObj,offset,offset,offset*2,offset*2); }
+			if(animFrame >= 15 && animFrame < 22) { ObjSprite2D_SetSourceRect(bossObj,offset*2,offset,offset*3,offset*2); }
+			if(animFrame >= 22 && animFrame < 30) { ObjSprite2D_SetSourceRect(bossObj,offset*3,offset,offset*4,offset*2); }
+			if(animFrame >= 30 && animFrame < 37) { ObjSprite2D_SetSourceRect(bossObj,offset*4,offset,offset*5,offset*2); }
+			if(animFrame >= 37 && animFrame < 45) { ObjSprite2D_SetSourceRect(bossObj,offset*5,offset,offset*6,offset*2); }
+			if(animFrame >= 45 && animFrame < 52) { ObjSprite2D_SetSourceRect(bossObj,offset*6,offset,offset*7,offset*2); }
+			if(animFrame >= 52) { ObjSprite2D_SetSourceRect(bossObj,offset*7,offset,offset*8,offset*2); }
+		}
+		else if(cos(dir) > 0){ //moving right
+			if(animFrame < 7) { ObjSprite2D_SetSourceRect(bossObj,0,offset*2,offset,offset*3); }
+			if(animFrame >= 7 && animFrame < 15) { ObjSprite2D_SetSourceRect(bossObj,offset,offset*2,offset*2,offset*3); }
+			if(animFrame >= 15 && animFrame < 22) { ObjSprite2D_SetSourceRect(bossObj,offset*2,offset*2,offset*3,offset*3); }
+			if(animFrame >= 22 && animFrame < 30) { ObjSprite2D_SetSourceRect(bossObj,offset*3,offset*2,offset*4,offset*3); }
+			if(animFrame >= 30 && animFrame < 37) { ObjSprite2D_SetSourceRect(bossObj,offset*4,offset*2,offset*5,offset*3); }
+			if(animFrame >= 37 && animFrame < 45) { ObjSprite2D_SetSourceRect(bossObj,offset*5,offset*2,offset*6,offset*3); }
+			if(animFrame >= 45 && animFrame < 52) { ObjSprite2D_SetSourceRect(bossObj,offset*6,offset*2,offset*7,offset*3); }
+			if(animFrame >= 52) { ObjSprite2D_SetSourceRect(bossObj,offset*7,offset*2,offset*8,offset*3); }
+		}
+		
+		animFrame++; //count animFrame
+		animFrame2++; //count animFrame2
+		if(animFrame > 60) { animFrame = 0; } //reset if higher than 60
+		
+		yield;
+	}
+}
+
+/* render background images */
+task TRenderBG(spell) {
+	//wait 1.6sec
+	wait(100);
+	
+	//if Spellcard is not a NonSpell
+	if (spell){
+		let scrollTexture = 0; //scrolling offset
+		
+		//display overlay image 
+		let overlayObj = ObjPrim_Create(OBJ_SPRITE_2D); //create 2D object
+		Obj_SetRenderPriorityI(overlayObj,21); //set layer
+		ObjPrim_SetTexture(overlayObj,overlay); //set texture
+		ObjRender_SetBlendType(overlayObj,BLEND_ADD_ARGB); //blend type: opacity + additive
+		ObjRender_SetAlpha(overlayObj,100); //set opacity
+		ObjSprite2D_SetSourceRect(overlayObj,0,0,318,450); //set texture size
+		ObjSprite2D_SetDestRect(overlayObj,0,0,GetStgFrameWidth,GetStgFrameHeight); //set image size
+		
+		//as long as boss alive
+		while(!Obj_IsDeleted(bossObj)) {
+			//scroll overlay towards bottom right
+			ObjSprite2D_SetSourceRect(overlayObj,0-scrollTexture,0-scrollTexture,512-scrollTexture,512-scrollTexture);
+			scrollTexture += 2; //scroll speed
+			
+			yield;
+		}
+			
+		//delete overlay
+		Obj_Delete(overlayObj); 
+	}
+}
+
+/* end Spellcard */
+task TEnd(last) {
+	//until boss has 0 HP
+	while(ObjEnemy_GetInfo(bossObj, INFO_LIFE) > 0) {
+		yield; //do nothing
+	}
+	
+	//if last Spellcard of boss
+	if (last){
+		PlaySE(bossdeathSFX); //play death sound
+	} else {
+		PlaySE(cardgetSFX); //play Card completed sound
+	}
+	TExplosionA(bossX,bossY,10,0.5); //explode boss effect
+	
+	Obj_Delete(bossInd); //delete boss indicator
+	Obj_Delete(bossObj); //delete boss
+	DeleteShotAll(TYPE_ALL, TYPE_ITEM);	//delete all bullets
+	//NotifyEventAll(EV_USER_STAGE+1,[bossX,bossY]); //spawn items
+	
+	//wait 1.5sec, then remove sound
+	wait(90);
+	RemoveSound(spellcardSFX);
+	RemoveSound(cardgetSFX);
+	RemoveSound(bossdeathSFX);
+	
+	//wait 0.5sec, then end Spellcard
+	wait(30);	
+	CloseScript(GetOwnScriptID());
+}
+
+/* render boss indicator */
+task bossIndicator{
+	//load image
+	let indImg = GetCurrentScriptDirectory ~ "img/bossIndicator.png";
+	
+	bossInd = ObjPrim_Create(OBJ_SPRITE_2D); //create 2D object
+	ObjPrim_SetTexture(bossInd, indImg); //set texture
+	ObjSprite2D_SetSourceRect(bossInd, 0, 0, GetTextureWidth(indImg), GetTextureHeight(indImg)); //set texture size
+	Obj_SetRenderPriorityI(bossInd, 90); //layer above interface
+	ObjSprite2D_SetDestCenter(bossInd); //set position anchor to center
+	
+	//until boss dies
+	while(!Obj_IsDeleted(bossObj)){
+		//set position
+		ObjRender_SetPosition(bossInd, bossX+30, GetStgFrameHeight+25, 0);
+		yield;
+	}
+}
+
+/* do nothing for w frames */
+function wait(w){ loop(w){ yield; } }
+
+/* calculate angle from boss to player */
+function angleToPlayer {
+	let dir = atan2(GetPlayerY-bossY,GetPlayerX-bossX);
+	return dir;
+}
