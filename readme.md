@@ -1,10 +1,10 @@
 ﻿# 北方　不寝番　~ Midnight Echoes
-# Eastern Nightwatch ~ Midnight Echoes
 
 
 ## Controls
+  
+Arrow keys: move character  
 
-Arrow keys: move character
 Y: shoot
 X: bomb
 Shift: slow down character / focus fire
