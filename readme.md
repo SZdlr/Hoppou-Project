@@ -14,14 +14,14 @@ Crtl: unlock framerate
 
 ## Credits
 
-design, programming, images: Svenja Zeidler  
-idea, plot: ChinaD011  
-dialog: Chantal Kelm  
-characters: ChinaD011, aka tenshi, MynameisChen, Distortion, somebunny  
-additional libraries: gtbot, darkwalker247  
-player script: gtbot  
-music: Lapfox Trax  
-patterns: Atle Mo, Gjermund Gustavsen, Irfan iLias  
+Design, programming, images: Svenja Zeidler  
+Idea, plot: ChinaD011  
+Dialog: Chantal Kelm  
+Characters: ChinaD011, aka tenshi, MynameisChen, Distortion, somebunny  
+Additional libraries: gtbot, darkwalker247  
+Player script: gtbot  
+Music: Lapfox Trax  
+Patterns: Atle Mo, Gjermund Gustavsen, Irfan iLias  
 
 
 ## Links
