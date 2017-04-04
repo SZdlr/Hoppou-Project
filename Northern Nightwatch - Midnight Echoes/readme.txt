@@ -7,7 +7,7 @@ Arrow keys: move character
 Y: shoot  
 X: bomb  
 Shift: slow down character / focus fire  
-Enter: ok  
+Enter: ok / advance dialog  
 Esc: pause / cancel  
 Crtl: unlock framerate  
 
