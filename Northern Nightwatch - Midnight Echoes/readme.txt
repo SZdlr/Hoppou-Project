@@ -1,7 +1,7 @@
-﻿# 北方　不寝番　~ Midnight Echoes
+﻿北方　不寝番　~ Midnight Echoes
 
 
-## Controls
+Controls
   
 Arrow keys: move character  
 Y: shoot  
@@ -12,7 +12,7 @@ Esc: pause / cancel
 Crtl: unlock framerate  
 
 
-## Credits
+Credits
 
 Design, programming, images: Svenja Zeidler  
 Idea, plot: ChinaD011  
@@ -24,7 +24,7 @@ Music: Lapfox Trax
 Patterns: Atle Mo, Gjermund Gustavsen, Irfan iLias  
 
 
-## Links
+Links
 
 Danmakufu ph3 engine: http://geocities.co.jp/SiliconValley-Oakland/9951/pre/th_dnh_ph3.html  
   
